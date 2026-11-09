@@ -5,12 +5,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-permissions:
+    permissions:
       contents: read
       packages: write
       
@@ -46,7 +45,7 @@ permissions:
       #          - argument de build APP_VERSION = SHA du commit
 
   deploy:
-      needs: build-and-push
+    needs: build-and-push
     # TODO 5 : ne lancer ce job qu'après la réussite du job build-and-push
     runs-on: ubuntu-latest
     steps:
