@@ -65,7 +65,7 @@ jobs:
       # TODO 7 : se connecter à la VM (secrets SSH_USER et SSH_HOST) et y exécuter :
       - name: Déployer sur la VM
         run: |
-          ssh -i ~/.ssh/id_deploy ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker pull $IMAGE:${{ github.sha }} && (docker rm -f webapp || true) && docker run -d --name webapp --restart unless-stopped -p 8080:5000 $IMAGE:${{ github.sha }}"
+          ssh -i ~/.ssh/id_deploy ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker pull $IMAGE:${{ github.sha }} && (docker rm -f webapp || true) && docker run -d --name webapp --restart unless-stopped -p 8080:5000 -e DB_HOST='${{ secrets.DB_HOST }}' -e DB_NAME='${{ secrets.DB_NAME }}' -e DB_USER='${{ secrets.DB_USER }}' -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' $IMAGE:${{ github.sha }}"
       #          docker pull, suppression de l'ancien conteneur "webapp",
       #          docker run -d --name webapp --restart unless-stopped -p 80:5000 <image>:<sha>
 
