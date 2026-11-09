@@ -1,5 +1,6 @@
 import os
 import socket
+import psycopg
 
 from flask import Flask, jsonify
 
@@ -24,6 +25,21 @@ def index():
 def health():
     return jsonify(status="ok", version=VERSION)
 
+@app.route("/db")
+def db():
+    try:
+        with psycopg.connect(
+            host=os.getenv("DB_HOST"),
+            dbname=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            sslmode="require",
+            connect_timeout=5,
+        ) as conn:
+            version = conn.execute("SELECT version()").fetchone()[0]
+        return jsonify(status="ok", database=os.getenv("DB_NAME"), version=version)
+    except Exception as e:
+        return jsonify(status="erreur", detail=str(e)), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
